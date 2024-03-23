@@ -21,9 +21,15 @@ import org.apache.dolphinscheduler.workflow.engine.exception.WorkflowExecuteRunn
 import org.apache.dolphinscheduler.workflow.engine.workflow.IWorkflowExecutionRunnable;
 
 /**
- * The WorkflowEngine is responsible for starting, stopping, pausing, and finalizing workflows.
+ * The WorkflowEngine is responsible for starting, stopping, pausing, and finalizing {@link IWorkflowExecutionRunnable}.
+ * All operation on a workflow instance should be done through the WorkflowEngine.
  */
 public interface IWorkflowEngine {
+
+    /**
+     * Start the workflow engine.
+     */
+    void start();
 
     /**
      * Trigger a workflow to start.
@@ -54,5 +60,10 @@ public interface IWorkflowEngine {
      * @param workflowInstanceId the ID of the workflow to finalize
      */
     void finalizeWorkflow(Integer workflowInstanceId);
+
+    /**
+     * Shutdown the workflow engine. The workflow engine cannot be restarted after shutdown. This method will block until the workflow engine is completely shutdown.
+     */
+    void shutdown();
 
 }

@@ -15,19 +15,19 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.server.master.dag;
+package org.apache.dolphinscheduler.workflow.engine.workflow;
 
 import java.util.Collection;
 
-public interface ITaskExecutionRunnableRepository {
+public interface IWorkflowExecutionRunnableRepository {
 
-    void storeTaskExecutionRunnable(TaskExecutionRunnable taskExecutionRunnable);
+    void storeWorkflowExecutionRunnable(IWorkflowExecutionRunnable workflowExecutionRunnable);
 
-    TaskExecutionRunnable getTaskExecutionRunnableById(Integer taskInstanceId);
+    IWorkflowExecutionRunnable getWorkflowExecutionRunnableById(Integer workflowInstanceId);
 
-    TaskExecutionRunnable getTaskExecutionRunnableByName(String taskInstanceName);
+    Collection<IWorkflowExecutionRunnable> getActiveWorkflowExecutionRunnable();
 
-    Collection<TaskExecutionRunnable> getActiveTaskExecutionRunnable();
+    void removeWorkflowExecutionRunnable(Integer workflowInstanceId);
 
-    void removeTaskExecutionRunnable(Integer taskInstanceId);
+    void clear();
 }

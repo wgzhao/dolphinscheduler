@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.server.master.events;
+package org.apache.dolphinscheduler.workflow.engine.engine;
 
-public interface IEvent {
+import org.apache.dolphinscheduler.workflow.engine.event.IEvent;
+
+public interface IEventDispatcher {
+
+    void dispatch(IEvent event);
 
 }

@@ -15,21 +15,28 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.server.master.dag;
+package org.apache.dolphinscheduler.workflow.engine.engine;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.apache.dolphinscheduler.workflow.engine.workflow.IEventfulExecutionRunnable;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class WorkflowIdentify {
+import java.util.concurrent.CompletableFuture;
 
-    private long workflowCode;
+/**
+ * The event firer interface used to fire event for {@link IEventfulExecutionRunnable}.
+ *
+ */
+public interface IEventFirer {
 
-    private int workflowVersion;
+    /**
+     * Fire all active events in the event repository
+     *
+     * @return the count of fired success events
+     */
+    CompletableFuture<Integer> fireActiveEvents(IEventfulExecutionRunnable eventfulExecutionRunnable);
+
+    /**
+     * Shutdown the event firer, this method will block until all firing task has been completed.
+     */
+    void shutdown();
 
 }

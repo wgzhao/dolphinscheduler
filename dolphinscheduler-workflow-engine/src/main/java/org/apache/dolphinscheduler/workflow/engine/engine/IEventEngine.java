@@ -15,10 +15,18 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.server.master.dag;
+package org.apache.dolphinscheduler.workflow.engine.engine;
 
-public interface IDAGEngineFactory {
+public interface IEventEngine {
 
-    IDAGEngine createDAGEngine(IWorkflowExecutionContext workflowExecutionContext);
+    /**
+     * Start the event engine.
+     */
+    void start();
+
+    /**
+     * Shutdown the event engine. The event engine cannot be restarted after shutdown. This method will block until the event engine is completely shutdown.
+     */
+    void shutdown();
 
 }

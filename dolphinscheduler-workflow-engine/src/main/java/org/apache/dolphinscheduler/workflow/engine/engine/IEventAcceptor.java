@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.server.master.events;
+package org.apache.dolphinscheduler.workflow.engine.engine;
 
-/**
- * Mark the event as AsyncEvent, if the event is marked as AsyncEvent, the event will be handled asynchronously and we don't .
- */
-public interface IAsyncEvent {
+import org.apache.dolphinscheduler.workflow.engine.event.IEvent;
+
+public interface IEventAcceptor {
+
+    void accept(IEvent event);
+
 }
