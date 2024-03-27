@@ -19,6 +19,7 @@ package org.apache.dolphinscheduler.workflow.engine.dag;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -29,46 +30,91 @@ import java.util.stream.Collectors;
  */
 public class WorkflowDAG implements DAG {
 
-    private final Map<String, DAGNode> dagNodeMap;
+    private final Map<NodeIdentify, Node> dagNodeMap;
 
-    public WorkflowDAG(List<DAGNode> dagNodes) {
-        this.dagNodeMap = dagNodes.stream().collect(Collectors.toMap(DAGNode::getNodeName, Function.identity()));
+    private final Map<NodeIdentify, List<Node>> outdegreeMap;
+
+    private final Map<NodeIdentify, List<Node>> inDegredMap;
+
+    public WorkflowDAG(List<Node> nodes, List<Edge> edges) {
+        this.dagNodeMap = nodes.stream().collect(Collectors.toMap(Node::getNodeIdentify, Function.identity()));
+        this.outdegreeMap = new HashMap<>();
+        this.inDegredMap = new HashMap<>();
+        // todo:
     }
 
     @Override
-    public List<DAGNode> getDirectPostNodes(DAGNode dagNode) {
-        final String nodeName = dagNode.getNodeName();
-        if (!dagNodeMap.containsKey(nodeName)) {
+    public List<Node> getDirectPostNodes(Node dagNode) {
+        NodeIdentify nodeIdentify = dagNode.getNodeIdentify();
+        if (!dagNodeMap.containsKey(nodeIdentify)) {
             return Collections.emptyList();
         }
-        DAGNode node = dagNodeMap.get(nodeName);
-        List<DAGNode> dagNodes = new ArrayList<>();
+        Node node = dagNodeMap.get(nodeIdentify);
+        List<Node> nodes = new ArrayList<>();
         for (DAGEdge edge : node.getOutDegrees()) {
             if (dagNodeMap.containsKey(edge.getToNodeName())) {
-                dagNodes.add(dagNodeMap.get(edge.getToNodeName()));
+                nodes.add(dagNodeMap.get(edge.getToNodeName()));
             }
         }
-        return dagNodes;
+        return nodes;
     }
 
     @Override
-    public List<DAGNode> getDirectPreNodes(DAGNode dagNode) {
+    public List<Node> getDirectPostNodes(String dagNodeName) {
+        Node node = getDAGNode(dagNodeName);
+        if (dagNodeName != null && node == null) {
+            throw new IllegalArgumentException("Cannot find the Node: " + dagNodeName + " in DAG");
+        }
+        return getDirectPostNodes(node);
+    }
+
+    @Override
+    public List<String> getDirectPostNodeNames(String dagNodeName) {
+        Node node = getDAGNode(dagNodeName);
+        if (dagNodeName != null && node == null) {
+            throw new IllegalArgumentException("Cannot find the Node: " + dagNodeName + " in DAG");
+        }
+        return getDirectPostNodes(node).stream()
+                .map(Node::getNodeName)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Node> getDirectPreNodes(Node dagNode) {
         final String nodeName = dagNode.getNodeName();
         if (!dagNodeMap.containsKey(nodeName)) {
             return Collections.emptyList();
         }
-        DAGNode node = dagNodeMap.get(nodeName);
-        List<DAGNode> dagNodes = new ArrayList<>();
+        Node node = dagNodeMap.get(nodeName);
+        List<Node> nodes = new ArrayList<>();
         for (DAGEdge edge : node.getInDegrees()) {
             if (dagNodeMap.containsKey(edge.getFromNodeName())) {
-                dagNodes.add(dagNodeMap.get(edge.getFromNodeName()));
+                nodes.add(dagNodeMap.get(edge.getFromNodeName()));
             }
         }
-        return dagNodes;
+        return nodes;
     }
 
     @Override
-    public DAGNode getDAGNode(String nodeName) {
+    public List<Node> getDirectPreNodes(String dagNodeName) {
+        Node node = getDAGNode(dagNodeName);
+        if (dagNodeName != null && node == null) {
+            throw new IllegalArgumentException("Cannot find the Node: " + dagNodeName + " in DAG");
+        }
+        return getDirectPreNodes(node);
+    }
+
+    @Override
+    public List<String> getDirectPreNodeNames(String dagNodeName) {
+        Node node = getDAGNode(dagNodeName);
+        if (dagNodeName != null && node == null) {
+            throw new IllegalArgumentException("Cannot find the Node: " + dagNodeName + " in DAG");
+        }
+        return getDirectPreNodes(node).stream().map(Node::getNodeName).collect(Collectors.toList());
+    }
+
+    @Override
+    public Node getDAGNode(String nodeName) {
         return dagNodeMap.get(nodeName);
     }
 

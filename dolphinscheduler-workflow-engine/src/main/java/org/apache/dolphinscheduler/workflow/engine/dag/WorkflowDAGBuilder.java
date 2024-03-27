@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class WorkflowDAGBuilder {
 
-    private final Map<String, DAGNode> taskNameMap;
+    private final Map<String, Node> taskNameMap;
 
     private WorkflowDAGBuilder() {
         this.taskNameMap = new HashMap<>();
@@ -62,7 +62,7 @@ public class WorkflowDAGBuilder {
             throw new IllegalArgumentException("TaskNode with name " + nodeName + " already exists");
         }
 
-        DAGNode taskNode = DAGNode.builder()
+        Node taskNode = Node.builder()
                 .nodeName(nodeName)
                 .inDegrees(new ArrayList<>())
                 .outDegrees(new ArrayList<>())
@@ -82,7 +82,7 @@ public class WorkflowDAGBuilder {
         String toNodeName = dagEdge.getToNodeName();
 
         if (taskNameMap.containsKey(fromNodeName)) {
-            DAGNode fromTask = taskNameMap.get(fromNodeName);
+            Node fromTask = taskNameMap.get(fromNodeName);
             if (fromTask.getOutDegrees().contains(dagEdge)) {
                 throw new IllegalArgumentException(
                         "Edge from " + fromNodeName + " to " + toNodeName + " already exists");
@@ -90,7 +90,7 @@ public class WorkflowDAGBuilder {
             fromTask.getOutDegrees().add(dagEdge);
         }
         if (taskNameMap.containsKey(toNodeName)) {
-            DAGNode toTask = taskNameMap.get(toNodeName);
+            Node toTask = taskNameMap.get(toNodeName);
             if (toTask.getInDegrees().contains(dagEdge)) {
                 throw new IllegalArgumentException(
                         "Edge from " + fromNodeName + " to " + toNodeName + " already exists");

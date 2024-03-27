@@ -15,21 +15,5 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.workflow.engine.dag;
-
-/**
- * The IDAGNodeAction represent the action of a DAG node.
- */
-public interface IDAGNodeAction {
-
-    void run();
-
-    void kill();
-
-    void pause();
-
-    void success();
-
-    void failure();
-
+package org.apache.dolphinscheduler.workflow.engine.workflow;public interface IChain {
 }

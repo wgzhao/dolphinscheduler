@@ -17,7 +17,7 @@
 
 package org.apache.dolphinscheduler.workflow.engine.engine;
 
-import org.apache.dolphinscheduler.workflow.engine.dag.DAGNode;
+import org.apache.dolphinscheduler.workflow.engine.dag.Node;
 import org.apache.dolphinscheduler.workflow.engine.event.TaskOperationEvent;
 import org.apache.dolphinscheduler.workflow.engine.event.TaskOperationType;
 import org.apache.dolphinscheduler.workflow.engine.workflow.ITaskExecutionRunnable;
@@ -50,8 +50,8 @@ public class DAGEngine implements IDAGEngine {
     @Override
     public void triggerTask(String taskName) {
         IWorkflowExecutionDAG workflowExecutionDAG = workflowExecutionContext.getWorkflowExecutionDAG();
-        DAGNode dagNode = workflowExecutionDAG.getDAGNode(taskName);
-        if (dagNode == null) {
+        Node node = workflowExecutionDAG.getDAGNode(taskName);
+        if (node == null) {
             log.error("Cannot find the DAGNode for task: {}", taskName);
             return;
         }
@@ -63,7 +63,7 @@ public class DAGEngine implements IDAGEngine {
             return;
         }
 
-        if (dagNode.isSkip()) {
+        if (node.isSkip()) {
             log.info("The task: {} is skipped", taskName);
             triggerNextTasks(taskName);
             return;

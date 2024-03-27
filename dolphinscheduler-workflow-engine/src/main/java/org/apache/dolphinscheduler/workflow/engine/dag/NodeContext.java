@@ -15,12 +15,22 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.workflow.engine.engine;
+package org.apache.dolphinscheduler.workflow.engine.dag;
 
-import org.apache.dolphinscheduler.workflow.engine.event.IEvent;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public interface IEventDispatcher {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class NodeContext {
 
-    void dispatch(IEvent event);
-
+    /**
+     * whether the node is skipped, default is false, which means the node is not skipped.
+     * If the node is skipped, the node will not be executed.
+     */
+    private boolean skip = false;
 }

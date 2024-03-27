@@ -45,13 +45,13 @@ public interface DAG {
      * <li> The post node of 3 is empty.
      * <li> The post node of null is 1,4,6.
      *
-     * @param dagNode the node of the DAG, can be null.
+     * @param node the node of the DAG, can be null.
      * @return post node list, sort by priority.
      */
-    List<DAGNode> getDirectPostNodes(DAGNode dagNode);
+    List<Node> getDirectPostNodes(Node node);
 
     /**
-     * Same with {@link #getDirectPostNodes(DAGNode)}.
+     * Same with {@link #getDirectPostNodes(Node)}.
      * <p>
      * If the dagNodeName is null, return the nodes which doesn't have inDegrees. Otherwise, return the post nodes of
      * the given dagNodeName. If the dagNodeName is not null and cannot find the node in DAG, throw IllegalArgumentException.
@@ -60,13 +60,7 @@ public interface DAG {
      * @return post task name list, sort by priority.
      * @throws IllegalArgumentException if the dagNodeName is not null and cannot find the node in DAG.
      */
-    default List<DAGNode> getDirectPostNodes(String dagNodeName) {
-        DAGNode dagNode = getDAGNode(dagNodeName);
-        if (dagNodeName != null && dagNode == null) {
-            throw new IllegalArgumentException("Cannot find the Node: " + dagNodeName + " in DAG");
-        }
-        return getDirectPostNodes(dagNode);
-    }
+    List<Node> getDirectPostNodes(String dagNodeName);
 
     /**
      * Same with {@link #getDirectPostNodes(String)}. Return the post node names.
@@ -75,13 +69,7 @@ public interface DAG {
      * @return post task name list, sort by priority.
      * @throws IllegalArgumentException if the dagNodeName is not null and cannot find the node in DAG.
      */
-    default List<String> getDirectPostNodeNames(String dagNodeName) {
-        DAGNode dagNode = getDAGNode(dagNodeName);
-        if (dagNodeName != null && dagNode == null) {
-            throw new IllegalArgumentException("Cannot find the Node: " + dagNodeName + " in DAG");
-        }
-        return getDirectPostNodes(dagNode).stream().map(DAGNode::getNodeName).collect(Collectors.toList());
-    }
+     List<String> getDirectPostNodeNames(String dagNodeName);
 
     /**
      * Get the direct pre node of given dagNode, if the dagNode is null, return the nodes which doesn't have outDegrees.
@@ -97,13 +85,13 @@ public interface DAG {
      * <li> The pre node of 3 is 2.
      * <li> The pre node of null is 3,5,6.
      *
-     * @param dagNode the node of the DAG, can be null.
+     * @param node the node of the DAG, can be null.
      * @return pre node list, sort by priority.
      */
-    List<DAGNode> getDirectPreNodes(DAGNode dagNode);
+    List<Node> getDirectPreNodes(Node node);
 
     /**
-     * Same with {@link #getDirectPreNodes(DAGNode)}.
+     * Same with {@link #getDirectPreNodes(Node)}.
      * <p>
      * If the dagNodeName is null, return the nodes which doesn't have outDegrees. Otherwise, return the pre nodes of
      * the given dagNodeName. If the dagNodeName is not null and cannot find the node in DAG, throw IllegalArgumentException.
@@ -112,13 +100,7 @@ public interface DAG {
      * @return pre task name list, sort by priority.
      * @throws IllegalArgumentException if the dagNodeName is not null and cannot find the node in DAG.
      */
-    default List<DAGNode> getDirectPreNodes(String dagNodeName) {
-        DAGNode dagNode = getDAGNode(dagNodeName);
-        if (dagNodeName != null && dagNode == null) {
-            throw new IllegalArgumentException("Cannot find the Node: " + dagNodeName + " in DAG");
-        }
-        return getDirectPreNodes(dagNode);
-    }
+    List<Node> getDirectPreNodes(String dagNodeName);
 
     /**
      * Same with {@link #getDirectPreNodes(String)}. Return the pre node names.
@@ -127,13 +109,7 @@ public interface DAG {
      * @return pre task name list, sort by priority.
      * @throws IllegalArgumentException if the dagNodeName is not null and cannot find the node in DAG.
      */
-    default List<String> getDirectPreNodeNames(String dagNodeName) {
-        DAGNode dagNode = getDAGNode(dagNodeName);
-        if (dagNodeName != null && dagNode == null) {
-            throw new IllegalArgumentException("Cannot find the Node: " + dagNodeName + " in DAG");
-        }
-        return getDirectPreNodes(dagNode).stream().map(DAGNode::getNodeName).collect(Collectors.toList());
-    }
+    List<String> getDirectPreNodeNames(String dagNodeName);
 
     /**
      * Get the node of the DAG by the node name.
@@ -141,6 +117,6 @@ public interface DAG {
      * @param nodeName the node name.
      * @return the node of the DAG, return null if cannot find the node.
      */
-    DAGNode getDAGNode(String nodeName);
+    Node getDAGNode(String nodeName);
 
 }

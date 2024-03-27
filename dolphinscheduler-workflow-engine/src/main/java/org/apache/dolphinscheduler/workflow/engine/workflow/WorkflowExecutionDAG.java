@@ -17,7 +17,7 @@
 
 package org.apache.dolphinscheduler.workflow.engine.workflow;
 
-import org.apache.dolphinscheduler.workflow.engine.dag.DAGNode;
+import org.apache.dolphinscheduler.workflow.engine.dag.Node;
 import org.apache.dolphinscheduler.workflow.engine.dag.WorkflowDAG;
 
 import java.util.ArrayList;
@@ -80,13 +80,13 @@ public class WorkflowExecutionDAG implements IWorkflowExecutionDAG {
     @Override
     public boolean isTaskAbleToBeTriggered(String taskNodeName) {
         // todo: Check whether the workflow instance is finished or ready to finish.
-        List<DAGNode> directPreNodes = getDirectPreNodes(taskNodeName);
+        List<Node> directPreNodes = getDirectPreNodes(taskNodeName);
         if (log.isDebugEnabled()) {
             log.debug("Begin to check whether the task {} is able to be triggered.", taskNodeName);
             log.debug("Task {} directly dependent on the task: {}.", taskNodeName,
-                    directPreNodes.stream().map(DAGNode::getNodeName).collect(Collectors.toList()));
+                    directPreNodes.stream().map(Node::getNodeName).collect(Collectors.toList()));
         }
-        for (DAGNode directPreNode : directPreNodes) {
+        for (Node directPreNode : directPreNodes) {
             if (directPreNode.isSkip()) {
                 log.debug("The task {} is skipped.", directPreNode.getNodeName());
                 continue;
@@ -105,19 +105,5 @@ public class WorkflowExecutionDAG implements IWorkflowExecutionDAG {
         taskExecutionRunnableRepository.storeTaskExecutionRunnable(taskExecutionRunnable);
     }
 
-    @Override
-    public List<DAGNode> getDirectPostNodes(DAGNode dagNode) {
-        return workflowDAG.getDirectPostNodes(dagNode);
-    }
-
-    @Override
-    public List<DAGNode> getDirectPreNodes(DAGNode dagNode) {
-        return workflowDAG.getDirectPreNodes(dagNode);
-    }
-
-    @Override
-    public DAGNode getDAGNode(String nodeName) {
-        return workflowDAG.getDAGNode(nodeName);
-    }
 
 }

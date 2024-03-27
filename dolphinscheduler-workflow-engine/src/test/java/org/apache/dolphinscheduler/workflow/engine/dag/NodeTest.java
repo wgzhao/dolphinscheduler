@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.Lists;
 
-class DAGNodeTest {
+class NodeTest {
 
     @Test
     void buildDAGNode_EmptyNodeName() {
         IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class,
-                () -> DAGNode.builder()
+                () -> Node.builder()
                         .inDegrees(new ArrayList<>())
                         .outDegrees(new ArrayList<>())
                         .build());
@@ -27,7 +27,7 @@ class DAGNodeTest {
     @Test
     void buildDAGNode_BadInDegree() {
         IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class,
-                () -> DAGNode.builder()
+                () -> Node.builder()
                         .nodeName("A")
                         .inDegrees(Lists.newArrayList(DAGEdge.builder()
                                 .fromNodeName(null)
@@ -42,7 +42,7 @@ class DAGNodeTest {
 
     @Test
     void buildDAGNode_NiceInDegree() {
-        assertDoesNotThrow(() -> DAGNode.builder()
+        assertDoesNotThrow(() -> Node.builder()
                 .nodeName("A")
                 .inDegrees(Lists.newArrayList(DAGEdge.builder()
                         .fromNodeName(null)
@@ -55,7 +55,7 @@ class DAGNodeTest {
     @Test
     void buildDAGNode_BadOutDegree() {
         IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class,
-                () -> DAGNode.builder()
+                () -> Node.builder()
                         .nodeName("A")
                         .inDegrees(new ArrayList<>())
                         .outDegrees(Lists.newArrayList(DAGEdge.builder()
@@ -70,7 +70,7 @@ class DAGNodeTest {
 
     @Test
     void buildDAGNode_NiceOutDegree() {
-        assertDoesNotThrow(() -> DAGNode.builder()
+        assertDoesNotThrow(() -> Node.builder()
                 .nodeName("A")
                 .inDegrees(new ArrayList<>())
                 .outDegrees(Lists.newArrayList(DAGEdge.builder()
@@ -82,23 +82,23 @@ class DAGNodeTest {
 
     @Test
     void buildDAGNode_NotSkip() {
-        DAGNode dagNode = DAGNode.builder()
+        Node node = Node.builder()
                 .nodeName("A")
                 .inDegrees(new ArrayList<>())
                 .outDegrees(new ArrayList<>())
                 .build();
-        assertFalse(dagNode.isSkip());
+        assertFalse(node.isSkip());
     }
 
     @Test
     void buildDAGNode_Skip() {
-        DAGNode dagNode = DAGNode.builder()
+        Node node = Node.builder()
                 .nodeName("A")
                 .skip(true)
                 .inDegrees(new ArrayList<>())
                 .outDegrees(new ArrayList<>())
                 .build();
-        assertTrue(dagNode.isSkip());
+        assertTrue(node.isSkip());
     }
 
 }

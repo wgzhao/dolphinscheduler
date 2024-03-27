@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * The WorkflowExecutionDAG represent the running workflow DAG.
  */
-public interface IWorkflowExecutionDAG extends DAG {
+public interface IWorkflowExecutionDAG {
 
     List<String> getStartNodeNames();
 

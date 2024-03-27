@@ -15,18 +15,5 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.workflow.engine.dag;
-
-import java.util.List;
-
-public interface IDAGNode {
-
-    String getNodeName();
-
-    boolean isSkip();
-
-    List<DAGEdge> getInDegrees();
-
-    List<DAGEdge> getOutDegrees();
-
+package org.apache.dolphinscheduler.workflow.engine.workflow;public interface IWorkflowExecutionRunnableDelegate {
 }
