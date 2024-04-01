@@ -15,24 +15,29 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.workflow.engine.workflow;
+package org.apache.dolphinscheduler.workflow.engine.dag;
 
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 
-@Getter
-public class WorkflowInstance implements IWorkflowInstance {
+@EqualsAndHashCode
+public class TaskIdentify implements ITaskIdentify {
 
-    private final int id;
-
+    private final Long id;
     private final String name;
 
-    public WorkflowInstance(int id, String name) {
+    public TaskIdentify(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public static WorkflowInstance of(int id, String name) {
-        return new WorkflowInstance(id, name);
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
 }

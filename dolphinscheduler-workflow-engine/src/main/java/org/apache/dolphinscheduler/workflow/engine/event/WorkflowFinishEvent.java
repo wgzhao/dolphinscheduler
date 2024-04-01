@@ -17,7 +17,7 @@
 
 package org.apache.dolphinscheduler.workflow.engine.event;
 
-import org.apache.dolphinscheduler.common.enums.WorkflowExecutionStatus;
+import org.apache.dolphinscheduler.workflow.engine.workflow.IWorkflowExecutionRunnableIdentify;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,12 +30,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WorkflowFinishEvent implements IWorkflowEvent, ISyncEvent {
 
-    private Integer workflowInstanceId;
+    private IWorkflowExecutionRunnableIdentify workflowExecutionRunnableIdentify;
 
-    private WorkflowExecutionStatus workflowExecutionStatus;
+    public static WorkflowFinishEvent of(IWorkflowExecutionRunnableIdentify workflowExecutionRunnableIdentify) {
+        return WorkflowFinishEvent.builder()
+                .workflowExecutionRunnableIdentify(workflowExecutionRunnableIdentify)
+                .build();
+    }
 
     @Override
-    public Class getEventOperatorClass() {
+    public IEventType getEventType() {
         return null;
     }
+
 }

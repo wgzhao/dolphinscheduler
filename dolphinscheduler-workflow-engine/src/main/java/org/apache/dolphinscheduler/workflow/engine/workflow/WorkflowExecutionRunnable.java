@@ -17,60 +17,169 @@
 
 package org.apache.dolphinscheduler.workflow.engine.workflow;
 
-import org.apache.dolphinscheduler.workflow.engine.engine.IDAGEngine;
-import org.apache.dolphinscheduler.workflow.engine.event.IEventRepository;
+import org.apache.dolphinscheduler.workflow.engine.dag.ITask;
+import org.apache.dolphinscheduler.workflow.engine.dag.ITaskIdentify;
+import org.apache.dolphinscheduler.workflow.engine.dag.WorkflowDAG;
+import org.apache.dolphinscheduler.workflow.engine.event.TaskOperationEvent;
+import org.apache.dolphinscheduler.workflow.engine.event.WorkflowFinishEvent;
 
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.Getter;
 
 @Getter
-public class WorkflowExecutionRunnable implements IWorkflowExecutionRunnable {
+public class WorkflowExecutionRunnable extends BaseWorkflowExecutionRunnable {
 
-    private final IWorkflowExecutionContext workflowExecutionContext;
+    private final WorkflowExecutionDAG workflowExecutionDAG;
+    private final WorkflowDAG workflowDAG;
 
-    private final IDAGEngine dagEngine;
+    private final IWorkflowExecutionRunnableDelegate workflowExecutionRunnableDelegate;
 
-    private volatile boolean eventFiring = false;
-
-    public WorkflowExecutionRunnable(IWorkflowExecutionContext workflowExecutionContext, IDAGEngine dagEngine) {
-        this.workflowExecutionContext = workflowExecutionContext;
-        this.dagEngine = dagEngine;
+    public WorkflowExecutionRunnable(IWorkflowExecutionContext workflowExecutionContext,
+                                     IWorkflowExecutionRunnableDelegate workflowExecutionRunnableDelegate) {
+        super(workflowExecutionContext, WorkflowExecutionRunnableStatus.CREATED);
+        this.workflowExecutionDAG = workflowExecutionContext.getWorkflowExecutionDAG();
+        this.workflowDAG = workflowExecutionContext.getWorkflowDAG();
+        this.workflowExecutionRunnableDelegate = workflowExecutionRunnableDelegate;
     }
 
+    @Override
     public void start() {
-        List<String> workflowStartNodeNames = workflowExecutionContext.getWorkflowExecutionDAG().getStartNodeNames();
-        if (CollectionUtils.isEmpty(workflowStartNodeNames)) {
-            dagEngine.triggerNextTasks(null);
-        } else {
-            workflowStartNodeNames.forEach(dagEngine::triggerTask);
+        if (!workflowExecutionRunnableStatus.canStart()) {
+            throw new UnsupportedOperationException(
+                    "The current status: " + workflowExecutionRunnableStatus + " cannot start.");
         }
+
+        statusTransform(WorkflowExecutionRunnableStatus.RUNNING, () -> {
+            workflowExecutionRunnableDelegate.start();
+            List<ITaskIdentify> startTaskIdentifies = workflowExecutionContext.getStartTaskIdentifies();
+            // If the start task is empty, trigger from the beginning
+            if (CollectionUtils.isEmpty(startTaskIdentifies)) {
+                workflowFinish();
+                return;
+            }
+            startTaskIdentifies.forEach(this::triggerTask);
+        });
+    }
+
+    @Override
+    public void triggerNextTasks(ITaskIdentify taskIdentify) {
+        List<ITaskIdentify> directPostNodeIdentifies = workflowDAG.getDirectPostNodesByIdentify(taskIdentify)
+                .stream()
+                .map(ITask::getIdentify)
+                .collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(directPostNodeIdentifies)) {
+            directPostNodeIdentifies.forEach(this::triggerTask);
+            return;
+        }
+        List<ITaskExecutionRunnableIdentify> activeTaskExecutionIdentify = getActiveTaskExecutionIdentify();
+        if (CollectionUtils.isEmpty(activeTaskExecutionIdentify)) {
+            workflowFinish();
+            return;
+        }
+        // The task chain is finished, but there are still active tasks, wait for the active tasks to finish
+    }
+
+    @Override
+    public void triggerTask(ITaskIdentify taskIdentify) {
+        ITaskExecutionPlan taskExecutionPlan = workflowExecutionDAG.getDAGNode(taskIdentify);
+        if (taskExecutionPlan == null) {
+            throw new IllegalArgumentException("Cannot find the ITaskExecutionPlan for taskIdentify: " + taskIdentify);
+        }
+        getEventRepository().storeEventToTail(TaskOperationEvent.startEvent(taskExecutionPlan));
+    }
+
+    @Override
+    public void failoverTask(ITaskExecutionRunnableIdentify taskExecutionRunnableIdentify) {
+        ITaskExecutionPlan taskExecutionPlan =
+                workflowExecutionDAG.getDAGNode(taskExecutionRunnableIdentify.getTaskIdentify());
+        if (taskExecutionPlan == null) {
+            throw new IllegalArgumentException("Cannot find the ITaskExecutionPlan for taskIdentify: "
+                    + taskExecutionRunnableIdentify.getTaskIdentify());
+        }
+        getEventRepository().storeEventToTail(TaskOperationEvent.failoverEvent(taskExecutionPlan));
+    }
+
+    @Override
+    public void retryTask(ITaskExecutionRunnableIdentify taskExecutionRunnableIdentify) {
+        ITaskExecutionPlan taskExecutionPlan =
+                workflowExecutionDAG.getDAGNode(taskExecutionRunnableIdentify.getTaskIdentify());
+        if (taskExecutionPlan == null) {
+            throw new IllegalArgumentException("Cannot find the ITaskExecutionPlan for taskIdentify: "
+                    + taskExecutionRunnableIdentify.getTaskIdentify());
+        }
+        getEventRepository().storeEventToTail(TaskOperationEvent.retryEvent(taskExecutionPlan));
     }
 
     @Override
     public void pause() {
-        dagEngine.pauseAllTask();
+        if (workflowExecutionRunnableStatus.canPause()) {
+            throw new UnsupportedOperationException(
+                    "The current status: " + workflowExecutionRunnableStatus + " cannot pause.");
+        }
+        statusTransform(WorkflowExecutionRunnableStatus.PAUSING, () -> {
+            workflowExecutionRunnableDelegate.pause();
+            List<ITaskExecutionRunnableIdentify> activeTaskExecutionIdentify = getActiveTaskExecutionIdentify();
+            if (CollectionUtils.isEmpty(activeTaskExecutionIdentify)) {
+                workflowFinish();
+                return;
+            }
+            activeTaskExecutionIdentify.forEach(this::pauseTask);
+        });
+    }
+
+    @Override
+    public void pauseTask(ITaskExecutionRunnableIdentify taskExecutionIdentify) {
+        ITaskExecutionPlan taskExecutionPlan = workflowExecutionDAG.getDAGNode(taskExecutionIdentify.getTaskIdentify());
+        if (taskExecutionPlan == null) {
+            throw new IllegalArgumentException(
+                    "Cannot find the ITaskExecutionPlan for taskIdentify: " + taskExecutionIdentify.getTaskIdentify());
+        }
+        getEventRepository().storeEventToTail(TaskOperationEvent.pauseEvent(taskExecutionPlan));
     }
 
     @Override
     public void kill() {
-        dagEngine.killAllTask();
+        if (workflowExecutionRunnableStatus.canKill()) {
+            throw new UnsupportedOperationException(
+                    "The current status: " + workflowExecutionRunnableStatus + " cannot kill.");
+        }
+        statusTransform(WorkflowExecutionRunnableStatus.KILLING, () -> {
+            workflowExecutionRunnableDelegate.kill();
+            List<ITaskExecutionRunnableIdentify> activeTaskExecutionIdentify = getActiveTaskExecutionIdentify();
+            if (CollectionUtils.isEmpty(activeTaskExecutionIdentify)) {
+                workflowFinish();
+                return;
+            }
+            activeTaskExecutionIdentify.forEach(this::killTask);
+        });
     }
 
     @Override
-    public IEventRepository getEventRepository() {
-        return workflowExecutionContext.getEventRepository();
+    public void killTask(ITaskExecutionRunnableIdentify taskExecutionIdentify) {
+        ITaskExecutionPlan taskExecutionPlan = workflowExecutionDAG.getDAGNode(taskExecutionIdentify.getTaskIdentify());
+        if (taskExecutionPlan == null) {
+            throw new IllegalArgumentException(
+                    "Cannot find the ITaskExecutionPlan for taskIdentify: " + taskExecutionIdentify.getTaskIdentify());
+        }
+        getEventRepository().storeEventToTail(TaskOperationEvent.killEvent(taskExecutionPlan));
     }
 
-    @Override
-    public boolean isEventFiring() {
-        return eventFiring;
+    private void workflowFinish() {
+        if (workflowExecutionDAG.isFailed()) {
+
+        }
+        getEventRepository().storeEventToTail(WorkflowFinishEvent.of(workflowExecutionRunnableIdentify));
     }
 
-    @Override
-    public void setEventFiring(boolean eventFiring) {
-        this.eventFiring = eventFiring;
+    private List<ITaskExecutionRunnableIdentify> getActiveTaskExecutionIdentify() {
+        return workflowExecutionDAG.getActiveTaskExecutionPlan()
+                .stream()
+                .map(ITaskExecutionPlan::getActiveTaskExecutionRunnable)
+                .map(ITaskExecutionRunnable::getIdentify)
+                .collect(Collectors.toList());
     }
 }

@@ -18,4 +18,5 @@
 package org.apache.dolphinscheduler.workflow.engine.event;
 
 public interface ISyncEvent {
+
 }

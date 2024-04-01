@@ -17,39 +17,30 @@
 
 package org.apache.dolphinscheduler.workflow.engine.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import org.apache.dolphinscheduler.workflow.engine.workflow.IWorkflowExecutionRunnableIdentify;
 
-@Data
-@Builder
-@AllArgsConstructor
 public class WorkflowOperationEvent implements IWorkflowEvent, ISyncEvent {
 
-    private Integer workflowInstanceId;
-    private WorkflowOperationType workflowOperationType;
+    private final IWorkflowExecutionRunnableIdentify workflowExecutionRunnableIdentify;
 
-    public static WorkflowOperationEvent of(Integer workflowInstanceId, WorkflowOperationType workflowOperationType) {
-        return WorkflowOperationEvent.builder()
-                .workflowInstanceId(workflowInstanceId)
-                .workflowOperationType(workflowOperationType)
-                .build();
+    public WorkflowOperationEvent(IWorkflowExecutionRunnableIdentify workflowExecutionRunnableIdentify) {
+        this.workflowExecutionRunnableIdentify = workflowExecutionRunnableIdentify;
     }
 
-    public static WorkflowOperationEvent triggerEvent(Integer workflowInstanceId) {
-        return of(workflowInstanceId, WorkflowOperationType.TRIGGER);
+    public static WorkflowOperationEvent triggerEvent(IWorkflowExecutionRunnableIdentify workflowExecutionRunnableIdentify) {
+        return new WorkflowOperationEvent(workflowExecutionRunnableIdentify);
     }
 
-    public static WorkflowOperationEvent pauseEvent(Integer workflowInstanceId) {
-        return of(workflowInstanceId, WorkflowOperationType.PAUSE);
+    public static WorkflowOperationEvent pauseEvent(IWorkflowExecutionRunnableIdentify workflowExecutionRunnableIdentify) {
+        return new WorkflowOperationEvent(workflowExecutionRunnableIdentify);
     }
 
-    public static WorkflowOperationEvent killEvent(Integer workflowInstanceId) {
-        return of(workflowInstanceId, WorkflowOperationType.KILL);
+    public static WorkflowOperationEvent killEvent(IWorkflowExecutionRunnableIdentify workflowExecutionRunnableIdentify) {
+        return new WorkflowOperationEvent(workflowExecutionRunnableIdentify);
     }
 
     @Override
-    public Class getEventOperatorClass() {
-        return WorkflowOperationEventOperator.class;
+    public IWorkflowExecutionRunnableIdentify getEventIdentify() {
+        return workflowExecutionRunnableIdentify;
     }
 }

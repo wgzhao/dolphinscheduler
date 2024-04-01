@@ -15,5 +15,37 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.workflow.engine.workflow;public interface IChain {
+package org.apache.dolphinscheduler.workflow.engine.workflow;
+
+public class DefaultWorkflowExecutionRunnableDelegate implements IWorkflowExecutionRunnableDelegate {
+
+    @Override
+    public void beforeStart() {
+
+    }
+
+    @Override
+    public void afterStart() {
+
+    }
+
+    @Override
+    public void beforePause() {
+
+    }
+
+    @Override
+    public void afterPause() {
+
+    }
+
+    @Override
+    public void beforeKill() {
+
+    }
+
+    @Override
+    public void afterKill() {
+
+    }
 }

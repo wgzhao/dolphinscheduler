@@ -15,5 +15,14 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.workflow.engine.workflow;public interface IWorkflowExecutionRunnableDelegate {
+package org.apache.dolphinscheduler.workflow.engine.workflow;
+
+public interface IWorkflowExecutionRunnableDelegate {
+
+    void start();
+
+    void pause();
+
+    void kill();
+
 }

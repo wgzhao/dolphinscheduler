@@ -15,15 +15,23 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.workflow.engine.event;
+package org.apache.dolphinscheduler.workflow.engine.workflow;
 
-public enum TaskOperationType {
+public interface IWorkflowOuterAction {
 
-    FAILOVER,
-    RUN,
-    RETRY,
-    KILL,
-    PAUSE,
-    ;
+    /**
+     * Start the workflow instance, this method will trigger the start task.
+     */
+    void start();
+
+    /**
+     * Kill the workflow instance.
+     */
+    void kill();
+
+    /**
+     * Pause the workflow instance.
+     */
+    void pause();
 
 }

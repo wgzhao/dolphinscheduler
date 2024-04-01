@@ -15,12 +15,8 @@
  * limitations under the License.
  */
 
-package org.apache.dolphinscheduler.workflow.engine.workflow;
+package org.apache.dolphinscheduler.workflow.engine.event;
 
-public interface IWorkflowInstance {
-
-    int getId();
-
-    String getName();
+public interface IWorkflowExecutionRunnableEventOperation extends IEventOperation {
 
 }

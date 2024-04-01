@@ -17,8 +17,10 @@
 
 package org.apache.dolphinscheduler.workflow.engine.event;
 
+import org.apache.dolphinscheduler.workflow.engine.workflow.IWorkflowExecutionRunnableIdentify;
+
 public interface IEvent {
 
-    Class getEventOperatorClass();
+    IWorkflowExecutionRunnableIdentify getWorkflowExecutionRunnableIdentify();
 
 }

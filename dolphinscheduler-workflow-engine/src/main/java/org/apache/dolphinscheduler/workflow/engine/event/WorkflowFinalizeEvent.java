@@ -17,6 +17,8 @@
 
 package org.apache.dolphinscheduler.workflow.engine.event;
 
+import org.apache.dolphinscheduler.workflow.engine.workflow.IWorkflowExecutionRunnableIdentify;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,7 +33,12 @@ public class WorkflowFinalizeEvent implements IWorkflowEvent, ISyncEvent {
     private Integer workflowInstanceId;
 
     @Override
-    public Class getEventOperatorClass() {
-        return WorkflowOperationEventOperator.class;
+    public IEventType getEventType() {
+        return null;
+    }
+
+    @Override
+    public IWorkflowExecutionRunnableIdentify getWorkflowExecutionRunnableIdentify() {
+        return null;
     }
 }

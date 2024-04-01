@@ -17,8 +17,6 @@
 
 package org.apache.dolphinscheduler.workflow.engine.event;
 
-import org.apache.dolphinscheduler.workflow.engine.workflow.ITaskExecutionRunnable;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -26,19 +24,6 @@ public class TaskOperationEventOperator implements ITaskEventOperator<TaskOperat
 
     @Override
     public void handleEvent(TaskOperationEvent event) {
-        ITaskExecutionRunnable taskExecutionRunnable = event.getTaskExecutionRunnable();
-        switch (event.getTaskOperationType()) {
-            case RUN:
-                taskExecutionRunnable.dispatch();
-                break;
-            case KILL:
-                taskExecutionRunnable.kill();
-                break;
-            case PAUSE:
-                taskExecutionRunnable.pause();
-                break;
-            default:
-                log.error("Unknown TaskOperationType for event: {}", event);
-        }
+
     }
 }

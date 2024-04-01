@@ -17,9 +17,6 @@
 
 package org.apache.dolphinscheduler.workflow.engine.engine;
 
-import org.apache.dolphinscheduler.workflow.engine.event.EventOperatorManager;
-import org.apache.dolphinscheduler.workflow.engine.event.IEvent;
-import org.apache.dolphinscheduler.workflow.engine.event.IEventOperatorManager;
 import org.apache.dolphinscheduler.workflow.engine.workflow.IWorkflowExecutionRunnableRepository;
 import org.apache.dolphinscheduler.workflow.engine.workflow.SingletonWorkflowExecutionRunnableRepository;
 
@@ -32,11 +29,6 @@ public class EventEngineFactory implements IEventEngineFactory {
             SingletonWorkflowExecutionRunnableRepository.getInstance();
 
     private IWorkflowExecutionRunnableRepository workflowExecuteRunnableRepository;
-
-    private static final IEventOperatorManager<IEvent> DEFAULT_EVENT_OPERATOR_MANAGER =
-            EventOperatorManager.getInstance();
-
-    private IEventOperatorManager<IEvent> eventOperatorManager = DEFAULT_EVENT_OPERATOR_MANAGER;
 
     private static final int DEFAULT_EVENT_FIRE_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
 
@@ -54,11 +46,6 @@ public class EventEngineFactory implements IEventEngineFactory {
         return this;
     }
 
-    public EventEngineFactory withEventOperatorManager(IEventOperatorManager<IEvent> eventOperatorManager) {
-        this.eventOperatorManager = eventOperatorManager;
-        return this;
-    }
-
     public int withEventFireThreadPoolSize(int eventFireThreadPoolSize) {
         this.eventFireThreadPoolSize = eventFireThreadPoolSize;
         return this.eventFireThreadPoolSize;
@@ -66,7 +53,7 @@ public class EventEngineFactory implements IEventEngineFactory {
 
     @Override
     public IEventEngine createEventEngine() {
-        EventFirer eventFirer = new EventFirer(eventOperatorManager, eventFireThreadPoolSize);
+        EventFirer eventFirer = new EventFirer(eventFireThreadPoolSize);
         return new EventEngine(workflowExecuteRunnableRepository, eventFirer);
     }
 }

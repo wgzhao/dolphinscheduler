@@ -17,6 +17,8 @@
 
 package org.apache.dolphinscheduler.workflow.engine.event;
 
+import org.apache.dolphinscheduler.workflow.engine.workflow.IWorkflowExecutionRunnableIdentify;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,12 +30,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WorkflowFailedEvent implements IWorkflowEvent {
 
-    private Integer workflowInstanceId;
-
     private String failedReason;
 
+    private IWorkflowExecutionRunnableIdentify workflowExecutionRunnableIdentify;
+
     @Override
-    public Class getEventOperatorClass() {
+    public IWorkflowExecutionRunnableIdentify getWorkflowExecutionRunnableIdentify() {
         return null;
     }
+
+    @Override
+    public IEventType getEventType() {
+        return null;
+    }
+
 }

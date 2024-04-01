@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EventOperatorManager implements IEventOperatorManager<IEvent> {
 
-    private static final Map<String, IEventOperator<IEvent>> EVENT_OPERATOR_MAP = new HashMap<>();
+    private static final Map<IEventType, IEventOperator<IEvent>> EVENT_OPERATOR_MAP = new HashMap<>();
 
     private static final EventOperatorManager INSTANCE = new EventOperatorManager();
 
@@ -39,8 +39,8 @@ public class EventOperatorManager implements IEventOperatorManager<IEvent> {
         return INSTANCE;
     }
 
-    public void registerEventOperator(IEventOperator<IEvent> eventOperator) {
-        EVENT_OPERATOR_MAP.put(eventOperator.getClass().getSimpleName(), eventOperator);
+    public void registerEventOperator(IEventType eventType, IEventOperator<IEvent> eventOperator) {
+        EVENT_OPERATOR_MAP.put(eventType, eventOperator);
     }
 
     @Override
@@ -48,10 +48,10 @@ public class EventOperatorManager implements IEventOperatorManager<IEvent> {
         if (event == null) {
             throw new IllegalArgumentException("event cannot be null");
         }
-        if (event.getEventOperatorClass() == null) {
+        if (event.getEventType() == null) {
             throw new IllegalArgumentException("event operator class cannot be null");
         }
-        return EVENT_OPERATOR_MAP.get(event.getEventOperatorClass().getSimpleName());
+        return EVENT_OPERATOR_MAP.get(event.getEventType());
     }
 
 }

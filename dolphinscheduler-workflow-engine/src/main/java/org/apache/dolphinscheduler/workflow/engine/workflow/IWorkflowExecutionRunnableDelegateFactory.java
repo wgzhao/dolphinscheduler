@@ -17,10 +17,8 @@
 
 package org.apache.dolphinscheduler.workflow.engine.workflow;
 
-public interface ITaskInstance {
+public interface IWorkflowExecutionRunnableDelegateFactory {
 
-    int getId();
-
-    String getName();
+    IWorkflowExecutionRunnableDelegate createWorkflowExecutionRunnableDelegate(IWorkflowExecutionContext workflowExecutionContext);
 
 }

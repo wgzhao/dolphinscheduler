@@ -20,7 +20,6 @@ package org.apache.dolphinscheduler.workflow.engine.engine;
 import org.apache.dolphinscheduler.common.thread.ThreadUtils;
 import org.apache.dolphinscheduler.workflow.engine.event.IAsyncEvent;
 import org.apache.dolphinscheduler.workflow.engine.event.IEvent;
-import org.apache.dolphinscheduler.workflow.engine.event.IEventOperatorManager;
 import org.apache.dolphinscheduler.workflow.engine.event.IEventRepository;
 import org.apache.dolphinscheduler.workflow.engine.utils.ExceptionUtils;
 import org.apache.dolphinscheduler.workflow.engine.workflow.IEventfulExecutionRunnable;
@@ -33,12 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EventFirer implements IEventFirer {
 
-    private final IEventOperatorManager<IEvent> eventOperatorManager;
-
     private final ThreadPoolExecutor eventFireThreadPool;
 
-    public EventFirer(IEventOperatorManager<IEvent> eventOperatorManager, int eventFireThreadPoolSize) {
-        this.eventOperatorManager = eventOperatorManager;
+    public EventFirer(int eventFireThreadPoolSize) {
         this.eventFireThreadPool =
                 ThreadUtils.newDaemonFixedThreadExecutor("EventFireThreadPool", eventFireThreadPoolSize);
     }
@@ -86,7 +82,7 @@ public class EventFirer implements IEventFirer {
     private void fireAsyncEvent(IEvent event) {
         CompletableFuture.runAsync(() -> {
             log.info("Begin fire IAsyncEvent: {}", event);
-            eventOperatorManager.getEventOperator(event).handleEvent(event);
+            event.getEventOperation().operate();
             log.info("Success fire IAsyncEvent: {}", event);
         }, eventFireThreadPool).exceptionally(ex -> {
             log.error("Failed to fire IAsyncEvent: {}", event, ex);
@@ -96,7 +92,7 @@ public class EventFirer implements IEventFirer {
 
     private void fireSyncEvent(IEvent event) {
         log.info("Begin fire SyncEvent: {}", event);
-        eventOperatorManager.getEventOperator(event).handleEvent(event);
+        event.getEventOperation().operate();
         log.info("Success fire SyncEvent: {}", event);
     }
 

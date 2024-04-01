@@ -17,25 +17,39 @@
 
 package org.apache.dolphinscheduler.workflow.engine.event;
 
-import org.apache.dolphinscheduler.workflow.engine.workflow.ITaskExecutionRunnable;
+import org.apache.dolphinscheduler.workflow.engine.workflow.ITaskExecutionPlan;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class TaskOperationEvent implements ITaskEvent, ISyncEvent {
 
-    private ITaskExecutionRunnable taskExecutionRunnable;
+    private IEventOperation eventOperation;
 
-    private TaskOperationType taskOperationType;
-
-    @Override
-    public Class getEventOperatorClass() {
-        return TaskOperationEventOperator.class;
+    public TaskOperationEvent(IEventOperation eventOperation) {
+        this.eventOperation = eventOperation;
     }
+
+    public static TaskOperationEvent startEvent(ITaskExecutionPlan taskExecutionPlan) {
+        return new TaskOperationEvent(taskExecutionPlan::start);
+    }
+
+    public static TaskOperationEvent failoverEvent(ITaskExecutionPlan taskExecutionPlan) {
+        return new TaskOperationEvent(taskExecutionPlan::failoverTask);
+    }
+
+    public static TaskOperationEvent retryEvent(ITaskExecutionPlan taskExecutionPlan) {
+        return new TaskOperationEvent(taskExecutionPlan::retryTask);
+    }
+
+    public static TaskOperationEvent pauseEvent(ITaskExecutionPlan taskExecutionPlan) {
+        return new TaskOperationEvent(taskExecutionPlan::pauseTask);
+    }
+
+    public static TaskOperationEvent killEvent(ITaskExecutionPlan taskExecutionPlan) {
+        return new TaskOperationEvent(taskExecutionPlan::killTask);
+    }
+
 }

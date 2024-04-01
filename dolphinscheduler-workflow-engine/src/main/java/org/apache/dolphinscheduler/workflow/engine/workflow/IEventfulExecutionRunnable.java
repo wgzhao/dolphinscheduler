@@ -24,15 +24,15 @@ public interface IEventfulExecutionRunnable {
 
     IEventRepository getEventRepository();
 
-    boolean isEventFiring();
-
-    void setEventFiring(boolean eventFiring);
-
     default void storeEventToTail(IEvent event) {
         getEventRepository().storeEventToTail(event);
     }
 
     default void storeEventToHead(IEvent event) {
         getEventRepository().storeEventToHead(event);
+    }
+
+    default void onEvent(IEvent event) {
+        throw new UnsupportedOperationException("onEvent is not implemented");
     }
 }
