@@ -36,10 +36,7 @@
         <module>dolphinscheduler-alert-http</module>
         <module>dolphinscheduler-alert-feishu</module>
         <module>dolphinscheduler-alert-slack</module>
-        <module>dolphinscheduler-alert-pagerduty</module>
         <module>dolphinscheduler-alert-webexteams</module>
-        <module>dolphinscheduler-alert-telegram</module>
-        <module>dolphinscheduler-alert-aliyunVoice</module>
         <module>dolphinscheduler-alert-prometheus</module>
     </modules>
 

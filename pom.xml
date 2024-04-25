@@ -45,7 +45,6 @@
         <module>dolphinscheduler-dist</module>
         <module>dolphinscheduler-service</module>
         <module>dolphinscheduler-microbench</module>
-        <module>dolphinscheduler-data-quality</module>
         <module>dolphinscheduler-standalone-server</module>
         <module>dolphinscheduler-datasource-plugin</module>
         <module>dolphinscheduler-meter</module>
