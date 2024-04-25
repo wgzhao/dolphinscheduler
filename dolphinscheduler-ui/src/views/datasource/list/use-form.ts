@@ -344,11 +344,6 @@ export const datasourceType: IDataBaseOptionKeys = {
     label: 'HIVE/IMPALA',
     defaultPort: 10000
   },
-  KYUUBI: {
-    value: 'KYUUBI',
-    label: 'KYUUBI',
-    defaultPort: 10000
-  },
   SPARK: {
     value: 'SPARK',
     label: 'SPARK',
@@ -369,95 +364,20 @@ export const datasourceType: IDataBaseOptionKeys = {
     label: 'SQLSERVER',
     defaultPort: 1433
   },
-  DB2: {
-    value: 'DB2',
-    label: 'DB2',
-    defaultPort: 50000
-  },
-  VERTICA: {
-    value: 'VERTICA',
-    label: 'VERTICA',
-    defaultPort: 5433
-  },
   PRESTO: {
     value: 'PRESTO',
     label: 'PRESTO',
     defaultPort: 8080
-  },
-  REDSHIFT: {
-    value: 'REDSHIFT',
-    label: 'REDSHIFT',
-    defaultPort: 5439
-  },
-  ATHENA: {
-    value: 'ATHENA',
-    label: 'ATHENA',
-    defaultPort: 0
   },
   TRINO: {
     value: 'TRINO',
     label: 'TRINO',
     defaultPort: 8080
   },
-  AZURESQL: {
-    value: 'AZURESQL',
-    label: 'AZURESQL',
-    defaultPort: 1433
-  },
-  STARROCKS: {
-    value: 'STARROCKS',
-    label: 'STARROCKS',
-    defaultPort: 9030
-  },
-  DAMENG: {
-    value: 'DAMENG',
-    label: 'DAMENG',
-    defaultPort: 5236
-  },
-  OCEANBASE: {
-    value: 'OCEANBASE',
-    label: 'OCEANBASE',
-    defaultPort: 2881
-  },
-  SNOWFLAKE: {
-    value: 'SNOWFLAKE',
-    label: 'SNOWFLAKE',
-    defaultPort: 3306
-  },
-  SSH: {
-    value: 'SSH',
-    label: 'SSH',
-    defaultPort: 22
-  },
-  DATABEND: {
-    value: 'DATABEND',
-    label: 'DATABEND',
-    defaultPort: 8000
-  },
-  HANA: {
-    value: 'HANA',
-    label: 'HANA',
-    defaultPort: 30015
-  },
-  ZEPPELIN: {
-    value: 'ZEPPELIN',
-    label: 'ZEPPELIN',
-    defaultPort: 8080
-  },
   DORIS: {
     value: 'DORIS',
     label: 'DORIS',
     defaultPort: 9030
-  },
-  SAGEMAKER: {
-    value: 'SAGEMAKER',
-    label: 'SAGEMAKER',
-    defaultPort: 0
-  },
-  K8S: {
-    value: 'K8S',
-    label: 'K8S',
-    defaultPort: 6443
   }
 }
 

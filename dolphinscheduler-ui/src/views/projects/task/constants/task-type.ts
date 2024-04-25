@@ -17,58 +17,27 @@
 export type TaskType =
   | 'SHELL'
   | 'SUB_PROCESS'
-  | 'DYNAMIC'
   | 'PROCEDURE'
   | 'SQL'
   | 'SPARK'
   | 'FLINK'
-  | 'MR'
   | 'PYTHON'
   | 'DEPENDENT'
   | 'HTTP'
   | 'DATAX'
   | 'ADDAX'
-  | 'PIGEON'
-  | 'SQOOP'
   | 'CONDITIONS'
-  | 'DATA_QUALITY'
   | 'SWITCH'
-  | 'SEATUNNEL'
-  | 'EMR'
-  | 'ZEPPELIN'
-  | 'K8S'
-  | 'JUPYTER'
-  | 'MLFLOW'
-  | 'OPENMLDB'
-  | 'DVC'
-  | 'JAVA'
-  | 'DINKY'
-  | 'SAGEMAKER'
-  | 'CHUNJUN'
   | 'FLINK_STREAM'
-  | 'PYTORCH'
-  | 'HIVECLI'
-  | 'DMS'
-  | 'DATASYNC'
-  | 'KUBEFLOW'
-  | 'LINKIS'
-  | 'DATA_FACTORY'
-  | 'REMOTESHELL'
 
 export type TaskExecuteType = 'STREAM' | 'BATCH'
 
 export const TASK_TYPES_MAP = {
-  JAVA: {
-    alias: 'JAVA'
-  },
   SHELL: {
     alias: 'SHELL'
   },
   SUB_PROCESS: {
     alias: 'SUB_PROCESS'
-  },
-  DYNAMIC: {
-    alias: 'DYNAMIC'
   },
   PROCEDURE: {
     alias: 'PROCEDURE'
@@ -82,10 +51,6 @@ export const TASK_TYPES_MAP = {
   FLINK: {
     alias: 'FLINK'
   },
-  MR: {
-    alias: 'MapReduce',
-    helperLinkDisable: true
-  },
   PYTHON: {
     alias: 'PYTHON'
   },
@@ -95,114 +60,32 @@ export const TASK_TYPES_MAP = {
   HTTP: {
     alias: 'HTTP'
   },
-  DATAX: {
-    alias: 'DataX'
-  },
   ADDAX: {
     alias: 'Addax'
-  },
-  PIGEON: {
-    alias: 'PIGEON'
-  },
-  SQOOP: {
-    alias: 'SQOOP',
-    helperLinkDisable: true
   },
   CONDITIONS: {
     alias: 'CONDITIONS'
   },
-  DATA_QUALITY: {
-    alias: 'DATA_QUALITY',
-    helperLinkDisable: true
-  },
   SWITCH: {
     alias: 'SWITCH'
-  },
-  SEATUNNEL: {
-    alias: 'SeaTunnel',
-    helperLinkDisable: true
-  },
-  EMR: {
-    alias: 'AmazonEMR',
-    helperLinkDisable: true
-  },
-  ZEPPELIN: {
-    alias: 'ZEPPELIN',
-    helperLinkDisable: true
-  },
-  JUPYTER: {
-    alias: 'JUPYTER',
-    helperLinkDisable: true
-  },
-  K8S: {
-    alias: 'K8S',
-    helperLinkDisable: true
-  },
-  MLFLOW: {
-    alias: 'MLFLOW',
-    helperLinkDisable: true
-  },
-  OPENMLDB: {
-    alias: 'OPENMLDB',
-    helperLinkDisable: true
-  },
-  DVC: {
-    alias: 'DVC',
-    helperLinkDisable: true
-  },
-  DINKY: {
-    alias: 'DINKY',
-    helperLinkDisable: true
-  },
-  SAGEMAKER: {
-    alias: 'SageMaker',
-    helperLinkDisable: true
-  },
-  CHUNJUN: {
-    alias: 'CHUNJUN',
-    helperLinkDisable: true
   },
   FLINK_STREAM: {
     alias: 'FLINK_STREAM',
     helperLinkDisable: true,
     taskExecuteType: 'STREAM'
   },
-  PYTORCH: {
-    alias: 'Pytorch',
-    helperLinkDisable: true
-  },
   HIVECLI: {
     alias: 'HIVECLI',
-    helperLinkDisable: true
-  },
-  DMS: {
-    alias: 'DMS',
-    helperLinkDisable: true
-  },
-  DATASYNC: {
-    alias: 'DATASYNC',
-    helperLinkDisable: true
-  },
-  KUBEFLOW: {
-    alias: 'KUBEFLOW',
-    helperLinkDisable: true
-  },
-  LINKIS: {
-    alias: 'LINKIS',
     helperLinkDisable: true
   },
   DATA_FACTORY: {
     alias: 'DATA_FACTORY',
     helperLinkDisable: true
-  },
-  REMOTESHELL: {
-    alias: 'REMOTESHELL',
-    helperLinkDisable: true
   }
 } as {
-  [key in TaskType]: {
-    alias: string
-    helperLinkDisable?: boolean
-    taskExecuteType?: TaskExecuteType
+    [key in TaskType]: {
+      alias: string
+      helperLinkDisable?: boolean
+      taskExecuteType?: TaskExecuteType
+    }
   }
-}
