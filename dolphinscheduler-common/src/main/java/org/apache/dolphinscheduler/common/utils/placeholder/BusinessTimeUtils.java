@@ -23,6 +23,7 @@ import static org.apache.dolphinscheduler.common.constants.DateConstants.PARAMET
 import static org.apache.dolphinscheduler.common.utils.DateUtils.format;
 
 import org.apache.dolphinscheduler.common.constants.DateConstants;
+import org.apache.dolphinscheduler.common.constants.TradeDateConstants;
 import org.apache.dolphinscheduler.common.enums.CommandType;
 
 import java.util.Date;
@@ -75,6 +76,7 @@ public class BusinessTimeUtils {
         result.put(DateConstants.PARAMETER_CURRENT_DATE, format(businessCurrentDate, PARAMETER_FORMAT_DATE, timezone));
         result.put(DateConstants.PARAMETER_BUSINESS_DATE, format(businessDate, PARAMETER_FORMAT_DATE, timezone));
         result.put(DateConstants.PARAMETER_DATETIME, format(businessCurrentDate, PARAMETER_FORMAT_TIME, timezone));
+        result.put(TradeDateConstants.PARAMETER_LAST_TRADE_DATE, format(businessDate, PARAMETER_FORMAT_DATE, timezone));
         return result;
     }
 }

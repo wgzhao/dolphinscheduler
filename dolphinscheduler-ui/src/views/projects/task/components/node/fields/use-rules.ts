@@ -17,11 +17,6 @@
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
-  queryRuleList,
-  getRuleFormCreateJson,
-  getDatasourceOptionsById
-} from '@/service/modules/data-quality'
-import {
   getDatasourceDatabasesById,
   getDatasourceTablesById,
   getDatasourceTableColumnsById

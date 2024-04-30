@@ -952,6 +952,7 @@ public class ProcessDefinitionServiceImpl extends BaseServiceImpl implements Pro
         }
         log.warn("Process definition with the same name {} already exists, processDefinitionCode:{}.",
                 processDefinition.getName(), processDefinition.getCode());
+        result.put("processCode", processDefinition.getCode());
         putMsg(result, Status.PROCESS_DEFINITION_NAME_EXIST, name.trim());
         return result;
     }
